@@ -1,21 +1,25 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
 class AppContainer extends Component {
   constructor() {
     super();
     this.state = {
-      title: ""
+      title: 'Test',
     };
   }
+
   render() {
+    const { title } = this.state;
+
     return (
       <div>
-        <h1>Testt</h1>
+        <h1>{title}</h1>
       </div>
     );
   }
 }
 export default AppContainer;
 
-const wrapper = document.getElementById("container");
-wrapper ? ReactDOM.render(<AppContainer />, wrapper) : false;
+const wrapper = document.getElementById('container');
+ReactDOM.render(<AppContainer />, wrapper);

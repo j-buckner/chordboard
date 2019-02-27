@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import Board from './Board.jsx';
+
 class AppContainer extends Component {
   constructor() {
     super();
@@ -15,6 +17,7 @@ class AppContainer extends Component {
     return (
       <div>
         <h1>{title}</h1>
+        <Board />
       </div>
     );
   }

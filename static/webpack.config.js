@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
   entry: './index.js',
   module: {
@@ -8,6 +10,15 @@ module.exports = {
         use: {
           loader: "babel-loader"
         }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader",
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader"
+        ]
       }
       // {
       //   test: /\.(js|jsx)$/,
@@ -15,5 +26,10 @@ module.exports = {
       //   use: ['eslint-loader']
       // }
     ]
-  }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'main.scss',
+    })
+  ]
 };

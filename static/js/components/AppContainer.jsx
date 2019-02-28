@@ -7,7 +7,7 @@ class AppContainer extends Component {
   constructor() {
     super();
     this.state = {
-      title: 'Test',
+      title: 'ChordBoard',
     };
   }
 

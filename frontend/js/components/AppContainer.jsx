@@ -17,7 +17,11 @@ class AppContainer extends Component {
     return (
       <div>
         <h1>{title}</h1>
-        <Board />
+        <div className="app-wrapper">
+          <div className="board-wrapper">
+            <Board />
+          </div>
+        </div>
       </div>
     );
   }

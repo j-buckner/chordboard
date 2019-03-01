@@ -79,9 +79,11 @@ class Board extends Component {
   }
 
   render() {
-    console.log(noteLookup);
+    
     return (
-      <h1>Test2</h1>
+      <div className="board">
+        <h1>Test2</h1>
+      </div>
     );
   }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import Cell from './Cell.jsx'
+
 const Tone = require('tone');
 
 const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
@@ -76,13 +78,24 @@ const colors = {
 class Board extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      measures: 4
+    }
   }
 
   render() {
-    
+    const styles = {
+      border: 'solid 1px #2A324B'
+    };
+
+    const cells = [...Array(this.state.measures * 20)].map((v, i) => {
+      return (<Cell style={styles} key={i}/>);
+    });
+
     return (
       <div className="board">
-        <h1>Test2</h1>
+        {cells}
       </div>
     );
   }

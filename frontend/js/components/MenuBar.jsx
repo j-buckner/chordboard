@@ -6,28 +6,28 @@ class MenuBar extends Component {
     super(props);
 
     this.state = {
-      btnState: 'start'
+      btnState: 'start',
     };
 
     autoBind(this);
   }
 
   start(e) {
-    console.log('here');
+    // e.preventDefault();
+    const { btnState } = this.state;
+
     e.target.style.background = "url('../img/stop.svg') no-repeat;";
-    this.setState({btnState: this.state.btnState == 'start' ? 'stop' : 'start'});
+    this.setState({ btnState: btnState === 'start' ? 'stop' : 'start' });
   }
 
   render() {
+    const { btnState } = this.state;
 
-    let className = `start-btn ${this.state.btnState}`
+    const className = `start-btn ${btnState}`;
     return (
-      <div>
-        <button className={className} onClick={this.start}></button>        
-      </div>
-    )
+      <button type="button" className={className} onClick={this.start} />
+    );
   }
 }
 
-export default MenuBar
-
+export default MenuBar;

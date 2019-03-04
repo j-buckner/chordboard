@@ -10,7 +10,7 @@ function AppContainer() {
       <div className="app-wrapper">
         <div className="board-wrapper">
           <MenuBar />
-          <hr/>
+          <hr />
           <Board />
         </div>
       </div>

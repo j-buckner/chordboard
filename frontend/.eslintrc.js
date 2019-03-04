@@ -21,6 +21,8 @@ module.exports = {
   rules: {
     'no-unused-vars': 'off',
     'import/extensions': 'off',
-    'react/forbid-prop-types': 'off'
+    'react/forbid-prop-types': 'off',
+    'react/no-array-index-key': 'off',
+    'jsx-a11y/interactive-supports-focus': 'off',
   },
 };

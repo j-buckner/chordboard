@@ -14,7 +14,13 @@ class Cell extends Component {
   }
 
   hitCell(e) {
-    const { enabled: hitEnabled } = this.props;
+    const {
+      enabled: hitEnabled,
+      note,
+      measure,
+      setNote,
+    } = this.props;
+
     const { enabled } = this.state;
 
     if (!hitEnabled) {
@@ -22,6 +28,8 @@ class Cell extends Component {
     }
 
     e.target.style.backgroundColor = enabled ? '#363c4f' : '#41e8f4';
+
+    setNote(note, measure);
     this.setState({ enabled: !enabled });
   }
 
@@ -40,12 +48,20 @@ class Cell extends Component {
 
 Cell.propTypes = {
   style: PropTypes.object,
-  text: PropTypes.string
+  text: PropTypes.string,
+  enabled: PropTypes.bool,
+  measure: PropTypes.number,
+  note: PropTypes.string,
+  setNote: PropTypes.func,
 };
 
 Cell.defaultProps = {
   style: {},
-  text: ''
+  text: '',
+  enabled: false,
+  measure: 0,
+  note: '',
+  setNote: null,
 };
 
 export default Cell;

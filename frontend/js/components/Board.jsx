@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import autoBind from 'react-autobind';
 import Cell from './Cell.jsx';
 
 const Tone = require('tone');
@@ -79,38 +80,81 @@ class Board extends Component {
 
     this.state = {
       measures: 4,
+      notes: [[], [], [], []],
     };
+
+    autoBind(this);
+  }
+
+  setNote(note, measure) {
+    const { notes } = this.state;
+
+    const notesUpdated = [...notes];
+    if (notes[measure].includes(note)) {
+      notesUpdated[measure] = notesUpdated[measure].filter(currNote => currNote !== note);
+      this.setState({
+        notes: notesUpdated,
+      });
+      return;
+    }
+
+    notesUpdated[measure].push(note);
+    this.setState({
+      notes: notesUpdated,
+    });
+
+    // const synthPart = new Tone.Sequence(
+    //   function(time, note) {
+    //     synth.triggerAttackRelease(note, "10hz", time);
+    //   },
+    //   notesUpdated,
+    //   "4n"
+    // );
+    // synthPart.start();
+    // Tone.Transport.start();
   }
 
   render() {
     const { measures } = this.state;
+    const cells = [...Array(14 * (measures + 1))].map((v, i) => {
+      let text = '';
+      let note = '';
+      let row = 0;
+      let enabled = false;
+      let styles = { border: 'solid 1px #2A324B' };
+      const measure = (i % (measures + 1)) - 1;
 
-    // eslint-disable-next-line react/no-array-index-key
-    const cells = [...Array(14 * (measures + 1)) + (measures + 1)].map((v, i) => {
-
-        // Set up cell styles and props
-        let text = ''
-        let enabled = false;
-        let styles = { border: 'solid 1px #2A324B' };
-        if (i % (measures + 1) == 0 && i > 0) {
-          text = noteLookupDisplay[12 - ((i / (measures + 1)) - 1)]; 
-          enabled = false;
-        } else if (i == 0) {
-          enabled = false;
-        } else if (i < (measures + 1)) {
-          enabled = false;
-          styles = {
-            border: 'solid 1px #2A324B',
-            borderBottom: 'solid 0.5px grey',
-            borderWidth: 'thin'
-          };
-        } else {
-          enabled = true;
-        }
-
-        return (<Cell style={styles} key={i} text={text} enabled={enabled}/>);
+      // Hacky logic to set styles and props
+      if (i % (measures + 1) === 0 && i > 0) {
+        text = noteLookupDisplay[12 - ((i / (measures + 1)) - 1)];
+        enabled = false;
+      } else if (i === 0) {
+        enabled = false;
+      } else if (i < (measures + 1)) {
+        enabled = false;
+        styles = {
+          border: 'solid 1px #2A324B',
+          borderBottom: 'solid 0.5px grey',
+          borderWidth: 'thin',
+        };
+      } else {
+        enabled = true;
+        row = 12 - Math.floor((i / (measures + 1)) - 1);
+        note = noteLookup[row];
       }
-    );
+
+      return (
+        <Cell
+          style={styles}
+          key={i}
+          text={text}
+          enabled={enabled}
+          note={note}
+          measure={measure}
+          setNote={this.setNote}
+        />
+      );
+    });
 
     return (
       <div className="board">

@@ -12,13 +12,17 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss|css)$/,
         use: [
           "style-loader",
           MiniCssExtractPlugin.loader,
           "css-loader",
           "sass-loader"
         ]
+      },
+      { 
+        test: /\.(svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
+        loader: "file-loader" 
       }
       // {
       //   test: /\.(js|jsx)$/,

@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
+import MenuBar from './MenuBar.jsx';
 import Board from './Board.jsx';
 
-class AppContainer extends Component {
-  render() {
-    return (
-      <div>
-        <div className="app-wrapper">
-          <div className="board-wrapper">
-            <Board />
-          </div>
+function AppContainer() {
+  return (
+    <div>
+      <div className="app-wrapper">
+        <div className="board-wrapper">
+          <MenuBar />
+          <hr/>
+          <Board />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 export default AppContainer;
 

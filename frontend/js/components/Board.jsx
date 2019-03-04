@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
-import Cell from './Cell.jsx'
+import Cell from './Cell.jsx';
 
 const Tone = require('tone');
 
@@ -80,18 +78,39 @@ class Board extends Component {
     super(props);
 
     this.state = {
-      measures: 4
-    }
+      measures: 4,
+    };
   }
 
   render() {
-    const styles = {
-      border: 'solid 1px #2A324B'
-    };
+    const { measures } = this.state;
 
-    const cells = [...Array(this.state.measures * 20)].map((v, i) => {
-      return (<Cell style={styles} key={i}/>);
-    });
+    // eslint-disable-next-line react/no-array-index-key
+    const cells = [...Array(14 * (measures + 1)) + (measures + 1)].map((v, i) => {
+
+        // Set up cell styles and props
+        let text = ''
+        let enabled = false;
+        let styles = { border: 'solid 1px #2A324B' };
+        if (i % (measures + 1) == 0 && i > 0) {
+          text = noteLookupDisplay[12 - ((i / (measures + 1)) - 1)]; 
+          enabled = false;
+        } else if (i == 0) {
+          enabled = false;
+        } else if (i < (measures + 1)) {
+          enabled = false;
+          styles = {
+            border: 'solid 1px #2A324B',
+            borderBottom: 'solid 0.5px grey',
+            borderWidth: 'thin'
+          };
+        } else {
+          enabled = true;
+        }
+
+        return (<Cell style={styles} key={i} text={text} enabled={enabled}/>);
+      }
+    );
 
     return (
       <div className="board">

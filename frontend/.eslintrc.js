@@ -20,6 +20,7 @@ module.exports = {
   ],
   rules: {
     'no-unused-vars': 'off',
-    'import/extensions': 'off'
+    'import/extensions': 'off',
+    'react/forbid-prop-types': 'off'
   },
 };

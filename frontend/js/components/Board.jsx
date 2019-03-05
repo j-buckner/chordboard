@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import MenuBar from './MenuBar.jsx';
 import Cell from './Cell.jsx';
+
 
 const Tone = require('tone');
 
@@ -81,13 +83,14 @@ class Board extends Component {
     this.state = {
       measures: 4,
       notes: [[], [], [], []],
+      playing: false,
     };
 
     autoBind(this);
   }
 
   setNote(note, measure) {
-    const { notes } = this.state;
+    const { notes, measures } = this.state;
 
     const notesUpdated = [...notes];
     if (notes[measure].includes(note)) {
@@ -103,15 +106,30 @@ class Board extends Component {
       notes: notesUpdated,
     });
 
-    // const synthPart = new Tone.Sequence(
-    //   function(time, note) {
-    //     synth.triggerAttackRelease(note, "10hz", time);
-    //   },
-    //   notesUpdated,
-    //   "4n"
-    // );
-    // synthPart.start();
-    // Tone.Transport.start();
+    //repeated event every 8th note
+    Tone.Transport.cancel();
+    for (let i = 0; i < measures; i++) {
+      Tone.Transport.schedule(function(time){
+        if (i == 4) {
+          Tone.Transport.stop();
+        }
+        synth.triggerAttackRelease(notes[i], "1m");
+      }, `${i}m`);
+    }
+  }
+
+  play(){
+    const { playing } = this.state;
+
+    if (!playing) {
+      Tone.Transport.start();
+    } else {
+      Tone.Transport.stop();
+    }
+
+    this.setState({
+      playing: !playing
+    });
   }
 
   render() {
@@ -157,8 +175,12 @@ class Board extends Component {
     });
 
     return (
-      <div className="board">
-        {cells}
+      <div>
+        <MenuBar play={this.play} />
+        <hr />
+        <div className="board">
+          {cells}
+        </div>
       </div>
     );
   }

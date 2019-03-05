@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import MenuBar from './MenuBar.jsx';
 import Board from './Board.jsx';
 
 function AppContainer() {
@@ -9,8 +7,6 @@ function AppContainer() {
     <div>
       <div className="app-wrapper">
         <div className="board-wrapper">
-          <MenuBar />
-          <hr />
           <Board />
         </div>
       </div>

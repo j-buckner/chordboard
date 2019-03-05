@@ -18,6 +18,8 @@ class MenuBar extends Component {
 
     e.target.style.background = "url('../img/stop.svg') no-repeat;";
     this.setState({ btnState: btnState === 'start' ? 'stop' : 'start' });
+
+    this.props.play();
   }
 
   render() {

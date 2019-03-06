@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import PropTypes from 'prop-types';
 
-
 class Cell extends Component {
   constructor(props) {
     super(props);

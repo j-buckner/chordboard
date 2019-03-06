@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import PropTypes from 'prop-types';
 
 class MenuBar extends Component {
   constructor(props) {
@@ -13,13 +14,13 @@ class MenuBar extends Component {
   }
 
   start(e) {
-    // e.preventDefault();
     const { btnState } = this.state;
+    const { play } = this.props;
 
     e.target.style.background = "url('../img/stop.svg') no-repeat;";
     this.setState({ btnState: btnState === 'start' ? 'stop' : 'start' });
 
-    this.props.play();
+    play();
   }
 
   render() {
@@ -31,5 +32,13 @@ class MenuBar extends Component {
     );
   }
 }
+
+MenuBar.propTypes = {
+  play: PropTypes.func,
+};
+
+MenuBar.defaultProps = {
+  play: null,
+};
 
 export default MenuBar;

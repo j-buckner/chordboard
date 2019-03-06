@@ -3,72 +3,12 @@ import autoBind from 'react-autobind';
 import MenuBar from './MenuBar.jsx';
 import Cell from './Cell.jsx';
 
+import { noteLookup, noteLookupDisplay, progressions } from '../constants.js';
 
 const Tone = require('tone');
 
-const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
-synth.set({
-  oscillator: {
-    type: 'sine',
-  },
-  envelope: {
-    attack: 0.5,
-    decay: 1,
-    sustain: 0.5,
-    release: 0.4,
-  },
-});
-
 Tone.Transport.bpm.value = 120;
 Tone.Transport.loopEnd = '4m';
-
-const noteLookup = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5'];
-const noteLookupDisplay = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B', 'C'];
-
-const progressions = [
-  {
-    display: ['I', 'IV', 'V', 'I'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['F4', 'A4', 'C4'], ['G4', 'B4', 'D4'], ['C4', 'E4', 'G4'],
-    ],
-  },
-  {
-    display: ['I', 'V', 'IV', 'I'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['G4', 'B4', 'D4'], ['F4', 'A4', 'C4'], ['C4', 'E4', 'G4'],
-    ],
-  },
-  {
-    display: ['I', 'V', 'vi', 'IV'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['G4', 'B4', 'D4'], ['A4', 'C4', 'E4'], ['F4', 'A4', 'C4'],
-    ],
-  },
-  {
-    display: ['iii', 'VI', 'ii', 'V'],
-    notes: [
-      ['E4', 'G4', 'B4'], ['A4', 'C4', 'E4'], ['D4', 'F4', 'A4'], ['G4', 'B4', 'D4'],
-    ],
-  },
-  {
-    display: ['I', 'vi', 'IV', 'V'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['A4', 'C4', 'E4'], ['F4', 'A4', 'C4'], ['G4', 'B4', 'D4'],
-    ],
-  },
-  {
-    display: ['I', 'vi', 'ii', 'V'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['A4', 'C4', 'E4'], ['D4', 'F4', 'A4'], ['G4', 'B4', 'D4'],
-    ],
-  },
-  {
-    display: ['I', 'IV', 'ii', 'V'],
-    notes: [
-      ['C4', 'E4', 'G4'], ['F4', 'A4', 'C4'], ['D4', 'F4', 'A4'], ['G4', 'B4', 'D4'],
-    ],
-  },
-];
 
 const colors = {
   disabled: '#363c4f',
@@ -105,30 +45,49 @@ class Board extends Component {
     this.setState({
       notes: notesUpdated,
     });
-
-    //repeated event every 8th note
-    Tone.Transport.cancel();
-    for (let i = 0; i < measures; i++) {
-      Tone.Transport.schedule(function(time){
-        if (i == 4) {
-          Tone.Transport.stop();
-        }
-        synth.triggerAttackRelease(notes[i], "1m");
-      }, `${i}m`);
-    }
   }
 
-  play(){
-    const { playing } = this.state;
+  play() {
+    const { playing, measures, notes } = this.state;
 
-    if (!playing) {
-      Tone.Transport.start();
-    } else {
+    if (playing) {
       Tone.Transport.stop();
+      this.setState({
+        playing: !playing,
+      });
+
+      return;
     }
 
+    const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
+    synth.set({
+      oscillator: {
+        type: 'sine',
+      },
+      envelope: {
+        attack: 0.5,
+        decay: 1,
+        sustain: 0.5,
+        release: 0.4,
+      },
+    });
+
+    // repeated event every 8th note
+    Tone.Transport.cancel();
+    Tone.Transport.clear();
+    for (let i = 0; i < measures; i++) {
+      Tone.Transport.schedule((time) => {
+        if (i === 4) {
+          Tone.Transport.stop();
+        }
+        synth.triggerAttackRelease(notes[i], '1m');
+      }, `${i}m`);
+    }
+
+    Tone.Transport.start();
+
     this.setState({
-      playing: !playing
+      playing: !playing,
     });
   }
 

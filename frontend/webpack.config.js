@@ -23,12 +23,12 @@ module.exports = {
       { 
         test: /\.(svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
         loader: "file-loader" 
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['eslint-loader']
       }
-      // {
-      //   test: /\.(js|jsx)$/,
-      //   exclude: /node_modules/,
-      //   use: ['eslint-loader']
-      // }
     ]
   },
   plugins: [

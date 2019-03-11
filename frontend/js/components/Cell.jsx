@@ -33,10 +33,10 @@ class Cell extends Component {
   }
 
   render() {
-    const { style, text } = this.props;
+    const { style, text, id } = this.props;
 
     return (
-      <div role="button" className="cell" style={style} onClick={this.hitCell} onKeyDown={this.hitCell}>
+      <div id={id} role="button" className="cell" style={style} onClick={this.hitCell} onKeyDown={this.hitCell}>
         <div className="cell-text">
           {text}
         </div>
@@ -52,6 +52,7 @@ Cell.propTypes = {
   measure: PropTypes.number,
   note: PropTypes.string,
   setNote: PropTypes.func,
+  id: PropTypes.string,
 };
 
 Cell.defaultProps = {
@@ -61,6 +62,7 @@ Cell.defaultProps = {
   measure: 0,
   note: '',
   setNote: null,
+  id: '',
 };
 
 export default Cell;

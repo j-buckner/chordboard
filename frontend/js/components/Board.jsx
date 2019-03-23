@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { RotateLoader } from 'react-spinners';
 import autoBind from 'react-autobind';
 import MenuBar from './MenuBar.jsx';
 import Cell from './Cell.jsx';
@@ -24,9 +25,27 @@ class Board extends Component {
       measures: 4,
       notes: [[], [], [], []],
       playing: false,
+      loading: false,
     };
 
     autoBind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+
+    fetch('/api/progressions/')
+      .then((response) => {
+        const contentType = response.headers.get('content-type');
+        if ((contentType && contentType.indexOf('application/json') !== -1) && response.ok) {
+          return response.json();
+        }
+        return null;
+      })
+      .then((data) => {
+        console.log('data', data);
+        this.setState({ loading: false });
+      });
   }
 
   setNote(note, measure) {
@@ -160,6 +179,20 @@ class Board extends Component {
 
   render() {
     const cells = this.getCellData();
+    const { loading } = this.state;
+
+    if (loading) {
+      return (
+        <div style={{ display: 'block', margin: '0 auto', width: '20px' }}>
+          <RotateLoader
+            sizeUnit="px"
+            size={20}
+            color="#123abc"
+            loading={loading}
+          />
+        </div>
+      );
+    }
 
     return (
       <div>

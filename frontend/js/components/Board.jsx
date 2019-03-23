@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { RotateLoader } from 'react-spinners';
 import autoBind from 'react-autobind';
+import PropTypes from 'prop-types';
 import MenuBar from './MenuBar.jsx';
 import Cell from './Cell.jsx';
 
-import { noteLookup, noteLookupDisplay, progressions } from '../constants.js';
+import { noteLookup, noteLookupDisplay } from '../constants.js';
 
 const Tone = require('tone');
 
@@ -25,27 +25,9 @@ class Board extends Component {
       measures: 4,
       notes: [[], [], [], []],
       playing: false,
-      loading: false,
     };
 
     autoBind(this);
-  }
-
-  componentDidMount() {
-    this.setState({ loading: true });
-
-    fetch('/api/progressions/')
-      .then((response) => {
-        const contentType = response.headers.get('content-type');
-        if ((contentType && contentType.indexOf('application/json') !== -1) && response.ok) {
-          return response.json();
-        }
-        return null;
-      })
-      .then((data) => {
-        console.log('data', data);
-        this.setState({ loading: false });
-      });
   }
 
   setNote(note, measure) {
@@ -179,21 +161,10 @@ class Board extends Component {
 
   render() {
     const cells = this.getCellData();
-    const { loading } = this.state;
+    const { progressions } = this.props;
 
-    if (loading) {
-      return (
-        <div style={{ display: 'block', margin: '0 auto', width: '20px' }}>
-          <RotateLoader
-            sizeUnit="px"
-            size={20}
-            color="#123abc"
-            loading={loading}
-          />
-        </div>
-      );
-    }
-
+    console.log('progs');
+    console.log(progressions);
     return (
       <div>
         <MenuBar play={this.play} />
@@ -205,5 +176,13 @@ class Board extends Component {
     );
   }
 }
+
+Board.propTypes = {
+  progressions: PropTypes.array,
+};
+
+Board.defaultProps = {
+  progressions: [],
+};
 
 export default Board;

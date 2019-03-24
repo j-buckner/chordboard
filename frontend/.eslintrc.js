@@ -24,6 +24,7 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'react/no-array-index-key': 'off',
     'jsx-a11y/interactive-supports-focus': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
     'no-plusplus': 'off',
   },
 };

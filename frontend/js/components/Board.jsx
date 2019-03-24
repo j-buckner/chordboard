@@ -180,16 +180,18 @@ class Board extends Component {
     });
   }
 
-  loadProgression(e) {
+  loadProgression(pIndex) {
     const { progressions } = this.props;
 
-    const progressionIndex = parseInt(e.target.value, 10) - 1;
+    const progressionIndex = parseInt(pIndex, 10) - 1;
     if (progressionIndex === -1) return;
 
     const { notes } = progressions[progressionIndex];
     this.setTransport(notes);
     this.colorNotes(notes);
     this.setState({ notes });
+
+    document.getElementById('progDropdown').click();
   }
 
   render() {

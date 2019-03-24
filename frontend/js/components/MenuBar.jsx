@@ -36,7 +36,6 @@ class MenuBar extends Component {
             href=""
             onClick={(e) => {
               e.preventDefault();
-              this.handleLoadProgression(i);
               this.setState({ currProgression: i });
               loadProgression(i + 1);
             }}

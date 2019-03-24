@@ -11,12 +11,6 @@ const Tone = require('tone');
 Tone.Transport.bpm.value = 120;
 Tone.Transport.loopEnd = '4m';
 
-const colors = {
-  disabled: '#363c4f',
-  enabled: '#891b1b',
-  playing: 'yellow',
-};
-
 class Board extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +26,6 @@ class Board extends Component {
 
   setNote(note, measure) {
     const { notes, measures } = this.state;
-
     const notesUpdated = [...notes];
     if (notes[measure].includes(note)) {
       notesUpdated[measure] = notesUpdated[measure].filter(currNote => currNote !== note);
@@ -42,14 +35,14 @@ class Board extends Component {
       return;
     }
 
-    notesUpdated[measure].push(note);
+    notesUpdated[measure] = [...notesUpdated[measure], note];
     this.setState({
-      notes: notesUpdated,
+      notes: [...notesUpdated],
     });
   }
 
   getCellData() {
-    const { measures } = this.state;
+    const { measures, notes } = this.state;
 
     return [...Array(14 * (measures + 1))].map((v, i) => {
       let text = '';
@@ -78,6 +71,9 @@ class Board extends Component {
         note = noteLookup[row];
       }
 
+      const active = measure > -1 ? notes[measure].includes(note) : false;
+      styles.backgroundColor = active ? '#41e8f4' : '#363c4f';
+
       return (
         <Cell
           id={`${measure}-${note}`}
@@ -86,10 +82,71 @@ class Board extends Component {
           text={text}
           enabled={enabled}
           note={note}
+          active={active}
           measure={measure}
           setNote={this.setNote}
         />
       );
+    });
+  }
+
+  setTransport(notes) {
+    const { measures } = this.state;
+
+    const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
+    synth.set({
+      oscillator: {
+        type: 'sine',
+      },
+      envelope: {
+        attack: 0.5,
+        decay: 1,
+        sustain: 0.5,
+        release: 0.4,
+      },
+    });
+
+    Tone.Transport.cancel();
+    Tone.Transport.clear();
+
+    // repeated event every 8th note
+    for (let i = 0; i < measures + 1; i++) {
+      Tone.Transport.schedule((time) => {
+        Tone.Draw.schedule(() => {
+          if (i === 4) {
+            Tone.Transport.stop();
+            notes[i - 1].forEach((note, j) => {
+              document.getElementById(`${i - 1}-${notes[i - 1][j]}`).style.backgroundColor = '#41e8f4';
+            });
+          } else {
+            notes[i].forEach((note, j) => {
+              document.getElementById(`${i}-${note}`).style.backgroundColor = 'yellow';
+            });
+            if (i > 0) {
+              notes[i - 1].forEach((note, j) => {
+                document.getElementById(`${i - 1}-${notes[i - 1][j]}`).style.backgroundColor = '#41e8f4';
+              });
+            }
+          }
+        }, time);
+
+        synth.triggerAttackRelease(notes[i], '1m');
+      }, `${i}m`);
+    }
+  }
+
+  colorNotes(newNotes) {
+    const { notes, measures } = this.state;
+
+    // Clear out notes and color in new ones
+    [...Array(measures)].forEach((e, i) => {
+      notes[i].forEach((note) => {
+        document.getElementById(`${i}-${note}`).style.backgroundColor = '#363c4f';
+      });
+
+      newNotes[i].forEach((note) => {
+        document.getElementById(`${i}-${note}`).style.backgroundColor = '#41e8f4';
+      });
     });
   }
 
@@ -114,43 +171,7 @@ class Board extends Component {
       return;
     }
 
-    const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
-    synth.set({
-      oscillator: {
-        type: 'sine',
-      },
-      envelope: {
-        attack: 0.5,
-        decay: 1,
-        sustain: 0.5,
-        release: 0.4,
-      },
-    });
-
-    // repeated event every 8th note
-    Tone.Transport.cancel();
-    Tone.Transport.clear();
-    for (let i = 0; i < measures + 1; i++) {
-      Tone.Transport.schedule((time) => {
-        Tone.Draw.schedule(() => {
-          if (i === 4) {
-            Tone.Transport.stop();
-            notes[i - 1].forEach((note, j) => {
-              document.getElementById(`${i - 1}-${notes[i - 1][j]}`).style.backgroundColor = '#41e8f4';
-            });
-          } else {
-            notes[i].forEach((note, j) => {
-              document.getElementById(`${i}-${note}`).style.backgroundColor = 'yellow';
-              if (i > 0) {
-                document.getElementById(`${i - 1}-${notes[i - 1][j]}`).style.backgroundColor = '#41e8f4';
-              }
-            });
-          }
-        }, time);
-
-        synth.triggerAttackRelease(notes[i], '1m');
-      }, `${i}m`);
-    }
+    this.setTransport(notes);
 
     Tone.Transport.start();
 
@@ -159,15 +180,28 @@ class Board extends Component {
     });
   }
 
+  loadProgression(e) {
+    const { progressions } = this.props;
+
+    const progressionIndex = parseInt(e.target.value, 10) - 1;
+    if (progressionIndex === -1) return;
+
+    const { notes } = progressions[progressionIndex];
+    this.setTransport(notes);
+    this.colorNotes(notes);
+    this.setState({ notes });
+  }
+
   render() {
     const cells = this.getCellData();
     const { progressions } = this.props;
-
-    console.log('progs');
-    console.log(progressions);
     return (
       <div>
-        <MenuBar play={this.play} />
+        <MenuBar
+          play={this.play}
+          progressions={progressions}
+          loadProgression={this.loadProgression}
+        />
         <hr />
         <div className="board">
           {cells}

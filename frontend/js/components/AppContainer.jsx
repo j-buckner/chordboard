@@ -1,8 +1,7 @@
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import autoBind from 'react-autobind';
-import { BeatLoader } from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 
 import Board from './Board.jsx';
 
@@ -41,9 +40,9 @@ class AppContainer extends Component {
         <div className="board-wrapper">
           {loading ? (
             <div style={{ display: 'block', margin: '0 auto', width: '45px' }}>
-              <BeatLoader
+              <ClipLoader
                 sizeUnit="px"
-                size={20}
+                size={40}
                 color="#123abc"
                 loading={loading}
               />

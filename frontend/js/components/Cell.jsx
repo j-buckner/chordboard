@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 class Cell extends Component {
   constructor(props) {
     super(props);
+
+    const { active } = this.props;
     this.state = {
-      enabled: false,
+      active,
     };
 
     autoBind(this);
@@ -14,22 +16,21 @@ class Cell extends Component {
 
   hitCell(e) {
     const {
-      enabled: hitEnabled,
+      enabled,
       note,
       measure,
       setNote,
     } = this.props;
 
-    const { enabled } = this.state;
-
-    if (!hitEnabled) {
+    const { active } = this.state;
+    if (!enabled) {
       return;
     }
 
-    e.target.style.backgroundColor = enabled ? '#363c4f' : '#41e8f4';
+    e.target.style.backgroundColor = active ? '#363c4f' : '#41e8f4';
 
     setNote(note, measure);
-    this.setState({ enabled: !enabled });
+    this.setState({ active: !active });
   }
 
   render() {
@@ -50,6 +51,7 @@ Cell.propTypes = {
   text: PropTypes.string,
   enabled: PropTypes.bool,
   measure: PropTypes.number,
+  active: PropTypes.bool,
   note: PropTypes.string,
   setNote: PropTypes.func,
   id: PropTypes.string,
@@ -62,6 +64,7 @@ Cell.defaultProps = {
   measure: 0,
   note: '',
   setNote: null,
+  active: false,
   id: '',
 };
 

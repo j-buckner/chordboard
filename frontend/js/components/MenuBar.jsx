@@ -23,22 +23,47 @@ class MenuBar extends Component {
     play();
   }
 
+  renderProgressions() {
+    const { progressions, loadProgression } = this.props;
+
+    const rows = [];
+    rows.push(<option value="0" key="0">Select Progression</option>);
+    progressions.forEach((e, i) => {
+      rows.push(
+        <option value={i + 1} key={i + 1}>{e.display.join('-')}</option>,
+      );
+    });
+
+    return (
+      <select onChange={loadProgression}>
+        {rows}
+      </select>
+    );
+  }
+
   render() {
     const { btnState } = this.state;
 
     const className = `start-btn ${btnState}`;
     return (
-      <button type="button" className={className} onClick={this.start} />
+      <div>
+        <button type="button" className={className} onClick={this.start} />
+        {this.renderProgressions()}
+      </div>
     );
   }
 }
 
 MenuBar.propTypes = {
   play: PropTypes.func,
+  progressions: PropTypes.array,
+  loadProgression: PropTypes.func,
 };
 
 MenuBar.defaultProps = {
   play: null,
+  progressions: [],
+  loadProgression: null,
 };
 
 export default MenuBar;

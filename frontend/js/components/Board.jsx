@@ -90,9 +90,8 @@ class Board extends Component {
     });
   }
 
-  setTransport(notes) {
-    const { measures } = this.state;
-
+  setTransport() {
+    const { measures, notes } = this.state;
     const synth = new Tone.PolySynth(12, Tone.Synth).toMaster();
     synth.set({
       oscillator: {
@@ -105,6 +104,8 @@ class Board extends Component {
         release: 0.4,
       },
     });
+
+    synth.volume.value = -10;
 
     Tone.Transport.cancel();
     Tone.Transport.clear();
@@ -135,20 +136,20 @@ class Board extends Component {
     }
   }
 
-  colorNotes(newNotes) {
-    const { notes, measures } = this.state;
+  // colorNotes(newNotes) {
+  //   const { notes, measures } = this.state;
 
-    // Clear out notes and color in new ones
-    [...Array(measures)].forEach((e, i) => {
-      notes[i].forEach((note) => {
-        document.getElementById(`${i}-${note}`).style.backgroundColor = '#363c4f';
-      });
+  //   // Clear out notes and color in new ones
+  //   [...Array(measures)].forEach((e, i) => {
+  //     notes[i].forEach((note) => {
+  //       document.getElementById(`${i}-${note}`).style.backgroundColor = '#363c4f';
+  //     });
 
-      newNotes[i].forEach((note) => {
-        document.getElementById(`${i}-${note}`).style.backgroundColor = '#41e8f4';
-      });
-    });
-  }
+  //     newNotes[i].forEach((note) => {
+  //       document.getElementById(`${i}-${note}`).style.backgroundColor = '#41e8f4';
+  //     });
+  //   });
+  // }
 
   play() {
     const { playing, measures, notes } = this.state;
@@ -171,8 +172,7 @@ class Board extends Component {
       return;
     }
 
-    this.setTransport(notes);
-
+    this.setTransport();
     Tone.Transport.start();
 
     this.setState({
@@ -180,15 +180,16 @@ class Board extends Component {
     });
   }
 
+  reset() {
+    this.setState({ notes: [[], [], [], []] });
+  }
+
   loadProgression(pIndex) {
     const { progressions } = this.props;
-
     const progressionIndex = parseInt(pIndex, 10) - 1;
     if (progressionIndex === -1) return;
 
     const { notes } = progressions[progressionIndex];
-    this.setTransport(notes);
-    this.colorNotes(notes);
     this.setState({ notes });
 
     document.getElementById('progDropdown').click();
@@ -203,6 +204,7 @@ class Board extends Component {
           play={this.play}
           progressions={progressions}
           loadProgression={this.loadProgression}
+          reset={this.reset}
         />
         <hr />
         <div className="board">

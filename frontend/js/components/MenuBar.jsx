@@ -68,12 +68,16 @@ class MenuBar extends Component {
 
   render() {
     const { btnState } = this.state;
+    const { reset } = this.props;
 
     const className = `start-btn ${btnState}`;
     return (
       <div className="menu-bar-wrapper">
         <button type="button" className={className} onClick={this.start} />
         {this.renderProgressions()}
+        <div className="reset-btn">
+          <button type="button" onClick={reset}>Reset</button>
+        </div>
       </div>
     );
   }
@@ -83,12 +87,14 @@ MenuBar.propTypes = {
   play: PropTypes.func,
   progressions: PropTypes.array,
   loadProgression: PropTypes.func,
+  reset: PropTypes.func,
 };
 
 MenuBar.defaultProps = {
   play: null,
   progressions: [],
   loadProgression: null,
+  reset: null,
 };
 
 export default MenuBar;

@@ -68,18 +68,19 @@ h1 {
 
 .menu-bar-wrapper {
   display: grid;
-  grid-template-columns: 0.05fr 1fr;
+  grid-template-columns: 0.05fr 1fr 0.05fr;
   grid-template-rows: 1fr;
-  grid-template-areas: ". .";
+  grid-column-gap: 10px;
+  grid-template-areas: ". . .";
 }
 
 .dropdown {
-  width: 50px;
+  width: 200px;
 
   label.dropdown--label {
     position: relative;
     height: 45px;
-    width: 300px;
+    width: 200px;
     line-height: 46px;
     display: inline-block;
     
@@ -176,5 +177,16 @@ h1 {
         top: 5px;
       }
     }
+  }
+}
+
+.reset-btn {
+  position: relative;
+  
+  button {
+    position: absolute;
+    bottom: 0;
+    width: 50px;
+    height: 25px;
   }
 }

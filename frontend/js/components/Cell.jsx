@@ -36,7 +36,7 @@ class Cell extends Component {
   render() {
     const { style, text, id, enabled } = this.props;
 
-    const className = enabled ? 'cell active' : 'cell';
+    const className = enabled ? 'cell active' : 'cell inactive';
 
     return (
       <div id={id} role="button" className={className} style={style} onClick={this.hitCell} onKeyDown={this.hitCell}>

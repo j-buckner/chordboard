@@ -116,6 +116,9 @@ class Board extends Component {
         Tone.Draw.schedule(() => {
           if (i === 4) {
             Tone.Transport.stop();
+            this.setState({
+              playing: false,
+            });
             notes[i - 1].forEach((note, j) => {
               document.getElementById(`${i - 1}-${notes[i - 1][j]}`).style.backgroundColor = '#41e8f4';
             });
@@ -135,21 +138,6 @@ class Board extends Component {
       }, `${i}m`);
     }
   }
-
-  // colorNotes(newNotes) {
-  //   const { notes, measures } = this.state;
-
-  //   // Clear out notes and color in new ones
-  //   [...Array(measures)].forEach((e, i) => {
-  //     notes[i].forEach((note) => {
-  //       document.getElementById(`${i}-${note}`).style.backgroundColor = '#363c4f';
-  //     });
-
-  //     newNotes[i].forEach((note) => {
-  //       document.getElementById(`${i}-${note}`).style.backgroundColor = '#41e8f4';
-  //     });
-  //   });
-  // }
 
   play() {
     const { playing, measures, notes } = this.state;
@@ -197,6 +185,7 @@ class Board extends Component {
 
   render() {
     const cells = this.getCellData();
+    const { playing } = this.state;
     const { progressions } = this.props;
     return (
       <div>
@@ -205,6 +194,7 @@ class Board extends Component {
           progressions={progressions}
           loadProgression={this.loadProgression}
           reset={this.reset}
+          playing={playing}
         />
         <hr />
         <div className="board">

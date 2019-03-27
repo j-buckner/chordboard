@@ -7,7 +7,6 @@ class MenuBar extends Component {
     super(props);
 
     this.state = {
-      btnState: 'start',
       currProgression: -1,
     };
 
@@ -19,8 +18,6 @@ class MenuBar extends Component {
     const { play } = this.props;
 
     e.target.style.background = "url('../img/stop.svg') no-repeat;";
-    this.setState({ btnState: btnState === 'start' ? 'stop' : 'start' });
-
     play();
   }
 
@@ -67,10 +64,9 @@ class MenuBar extends Component {
   }
 
   render() {
-    const { btnState } = this.state;
-    const { reset } = this.props;
+    const { reset, playing } = this.props;
 
-    const className = `start-btn ${btnState}`;
+    const className = `start-btn ${playing ? 'stop' : 'start'}`;
     return (
       <div className="menu-bar-wrapper">
         <button type="button" className={className} onClick={this.start} />
@@ -88,6 +84,7 @@ MenuBar.propTypes = {
   progressions: PropTypes.array,
   loadProgression: PropTypes.func,
   reset: PropTypes.func,
+  playing: PropTypes.bool,
 };
 
 MenuBar.defaultProps = {
@@ -95,6 +92,7 @@ MenuBar.defaultProps = {
   progressions: [],
   loadProgression: null,
   reset: null,
+  playing: false,
 };
 
 export default MenuBar;
